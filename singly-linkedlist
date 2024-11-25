@@ -1,0 +1,205 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+
+struct Node* head = NULL;
+
+
+struct Node* createNode(int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->next = NULL;
+    return newNode;
+}
+
+
+void insertAtBeg(int val) {
+    struct Node* newNode = createNode(val);
+    newNode->next = head;
+    head = newNode;
+}
+
+
+void insertAtEnd(int data) {
+    struct Node* newNode = createNode(data);
+    if (head == NULL) {
+        head = newNode;
+        return;
+    }
+    struct Node* temp = head;
+    while (temp->next != NULL){
+        temp = temp->next;
+    }
+    temp->next = newNode;
+}
+
+
+void insertAtAny(int data, int pos) {
+    if (pos < 1) {
+        printf("Position cannot be negative or zero .\n");
+        return;
+    }
+    if (pos == 1) {
+        insertAtBeg(data);
+        return;
+    }
+    struct Node* newNode = createNode(data);
+    struct Node* temp = head;
+    for (int i = 1; i < pos - 1 && temp != NULL; i++) {
+        temp = temp->next;
+    }
+    if (temp == NULL) {
+        printf("Position cannot be greater than the length of the list.\n");
+        free(newNode);
+    } else {
+        newNode->next = temp->next;
+        temp->next = newNode;
+    }
+}
+
+
+void deleteAtBeg() {
+    if (head == NULL) {
+        printf("List is empty.\n");
+        return;
+    }
+    struct Node* temp = head;
+    head = head->next;
+    printf("%d is deleted\n", temp -> data);
+    free(temp);
+}
+
+void deleteAtEnd() {
+    if (head == NULL) {
+        printf("List is empty.\n");
+        return;
+    }
+    struct Node* temp = head;
+    if (temp->next == NULL) {
+        printf("%d is deleted\n", temp -> data);
+        free(temp);
+        head = NULL;
+        return;
+    }
+    struct Node* prev = NULL;
+    while (temp->next != NULL) {
+        prev = temp;
+        temp = temp->next;
+    }
+    printf("%d is deleted\n", temp -> data);
+    prev->next = NULL;
+    free(temp);
+}
+
+
+void deleteAtAny(int pos) {
+    if (head == NULL) {
+        printf("List is empty.\n");
+        return;
+    }
+    if (pos < 1) {
+        printf("Position cannot be zero or negative. \n");
+        return;
+    }
+    if (pos == 1) {
+        deleteAtBeg();
+        return;
+    }
+    struct Node* temp = head;
+    struct Node* prev = NULL;
+    for (int i = 1; i < pos && temp != NULL; i++) {
+        prev = temp;
+        temp = temp->next;
+    }
+    if (temp == NULL) {
+        printf("Enter valid position . Position is greater than the length of the list.\n");
+    } else {
+        prev->next = temp->next;
+        printf("%d is deleted\n", temp -> data);
+        free(temp);
+    }
+}
+
+
+void display() {
+    struct Node* temp = head;
+    if (temp == NULL) {
+        printf("List is empty.\n");
+        return;
+    }
+    while (temp != NULL) {
+        printf("%d -> ", temp->data);
+        temp = temp->next;
+    }
+    printf("NULL\n");
+}
+
+
+
+void main() {
+
+    int ch, input, pos;
+
+    do {
+
+        printf("\nSelect the operation to perform : \n");
+        printf("1. Insert at beginning\n");
+        printf("2. Insert at end\n");
+        printf("3. Insert at specific position\n");
+        printf("4. Delete at beginning\n");
+        printf("5. Delete at end\n");
+        printf("6. Delete at specific position\n");
+        printf("7. Display \n");
+        printf("8. To Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &ch);
+
+
+        switch (ch) {
+            case 1:
+                printf("Enter the value to insert at beginning: ");
+                scanf("%d", &input);
+                insertAtBeg(input);
+                break;
+            case 2:
+                printf("Enter value to insert at end : ");
+                scanf("%d", &input);
+                insertAtEnd(input);
+                break;
+            case 3:
+                printf("Enter value to insert : ");
+                scanf("%d", &input);
+                printf("Enter the position to insert : ");
+                scanf("%d", &pos);
+                insertAtAny(input, pos);
+                break;
+            case 4:
+                deleteAtBeg();
+                break;
+            case 5:
+                deleteAtEnd();
+                break;
+            case 6:
+                printf("Enter position to delete: ");
+                scanf("%d", &pos);
+                deleteAtAny(pos);
+                break;
+            case 7:
+                display();
+                break;
+            case 8:
+                printf("Exiting the loop.......\n");
+                break;
+            default:
+                printf("Invalid choice, try agian . \n");
+        }
+
+    } while (ch != 8);
+
+}
