@@ -1,4 +1,4 @@
-//Circular Linked List
+//Disjoint Set
 
 #include <stdio.h>
 #include <stdlib.h>
